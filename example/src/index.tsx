@@ -1,4 +1,4 @@
-import React from 'light-react';
+import React, { useState } from 'light-react';
 
 const test1 = () => {
     React.render(
@@ -139,4 +139,59 @@ const test6ExampleRerender = () => {
     }, 1000);
 }
 
-test6ExampleRerender();
+const test7ExampleUseState = () => {
+    function Comp() {
+        const [text, setText] = useState("initial");
+
+        console.log("rendered");
+
+        // @ts-ignore
+        window.clickComp = () => { 
+            console.log("clicked");
+            setText("clicked")
+        }
+
+        return (
+            <div onclick={"clickComp();"}>
+                <h3>{text}</h3>
+            </div>
+        )
+    }
+
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+const test8ExampleUseState = () => {
+
+    function Nested({ answer }: any) {
+        return <h1>Answer is {answer}</h1>;
+    }
+
+    function Comp() {
+        const [count, setCount] = useState(0);
+
+        // @ts-ignore
+        window.clickComp = () => { 
+            setCount(count + 1)
+        }
+
+        return (
+            <div onclick={"clickComp();"}>
+                <Nested answer="42"/>
+                <h3>You clicked {`${count}`} times</h3>
+            </div>
+        )
+    }
+
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+test8ExampleUseState();

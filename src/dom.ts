@@ -32,10 +32,14 @@ export const render = (nextVDOM: LightNode, rootDOM: Element | null) => {
 
     const prevVDOM = rootDOM._VDOM;
     rootDOM._VDOM = nextVDOM;
-    const patches: Patch[] = diff(prevVDOM, nextVDOM, rootDOM);
-    patch(patches);
+    diffAndPatch(prevVDOM, nextVDOM, rootDOM);
+}
 
+export const diffAndPatch = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Element) => {
+    const patches: Patch[] = diff(prevVDOM, nextVDOM, parentDOM);
+    patch(patches);
     console.log(patches);
+    return patches;
 }
 
 export const patch = (patches: Patch[]) => {
@@ -43,8 +47,6 @@ export const patch = (patches: Patch[]) => {
         if (patch.type === 'create') {
             const { nextVDOM, parentDOM } = patch;
             const dom = createDOM(nextVDOM);
-            console.log(isLightComponentElement(nextVDOM))
-            console.log({ dom, nextVDOM, parentDOM })
             parentDOM.appendChild(dom)
         } else if (patch.type === 'delete') {
             const { prevVDOM, parentDOM } = patch;
@@ -59,6 +61,7 @@ export const patch = (patches: Patch[]) => {
             if (DOM instanceof HTMLElement) {
                 DOM.setAttribute(key, value);
             } else {
+                console.error(`Trying to set ${key} = ${value} on`, DOM);
                 throw new Error("Cannot update props on a non-HTMLElement")
             }
         } else if (patch.type === 'update') {

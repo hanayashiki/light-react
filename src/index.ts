@@ -3,6 +3,8 @@ import { createAtom, render } from './dom';
 import { LightComponent, LightNode } from './types/dom';
 import { createComponentElement } from './component';
 
+export * from './hooks';
+
 
 export function createElement<P extends {}>(
     tag: string | LightComponent<P>,
@@ -18,7 +20,7 @@ export function createElement<P extends {}>(
 
 const React = {
     createElement,
-    render,
+    render
 }
 
 export default React;

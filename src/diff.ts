@@ -28,6 +28,8 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
                 const childB = nextVDOM.children[i] || undefined;
                 patches.push(...diff(childA, childB, prevVDOM._DOM!));
             }
+
+            nextVDOM._DOM = prevVDOM._DOM;
         } else {
             patches.push({
                 type: 'update',
@@ -39,6 +41,8 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
     } else if (isLightText(prevVDOM) && isLightText(nextVDOM)) {
         if (prevVDOM.text !== nextVDOM.text) {
             patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM })
+        } else {
+            nextVDOM._DOM = prevVDOM._DOM;
         }
     } else if (isLightComponentElement(prevVDOM) && isLightComponentElement(nextVDOM)) {
         if (prevVDOM.component !== nextVDOM.component) {
@@ -46,7 +50,8 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
         } else if (!areShallowEqual(prevVDOM.props, nextVDOM.props)) {
             nextVDOM.shallowRender();
             patches.push(...diff(prevVDOM.resultVDOM, nextVDOM.resultVDOM, prevVDOM._DOM!));
-        } // Else the VDOM will not be updated
+        }
+        nextVDOM._DOM = prevVDOM._DOM; // TODO: Make this correct considering inner elements
     } else if (prevVDOM !== nextVDOM) {
         patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM });
     } else {
@@ -54,7 +59,6 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
         throw new Error("Unknown parameters");
     }
 
-    // console.log(prevVDOM, nextVDOM, patches);
     return patches;
 }
 
