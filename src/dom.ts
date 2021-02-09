@@ -34,13 +34,15 @@ export const render = (nextVDOM: LightNode, rootDOM: Element | null) => {
     rootDOM._VDOM = nextVDOM;
     const patches: Patch[] = diff(prevVDOM, nextVDOM, rootDOM);
     patch(patches);
+
+    console.log(patches);
 }
 
 export const patch = (patches: Patch[]) => {
     patches.forEach(patch => {
         if (patch.type === 'create') {
             const { nextVDOM, parentDOM } = patch;
-            const dom = createDOM(nextVDOM)
+            const dom = createDOM(nextVDOM);
             console.log(isLightComponentElement(nextVDOM))
             console.log({ dom, nextVDOM, parentDOM })
             parentDOM.appendChild(dom)

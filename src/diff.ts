@@ -37,15 +37,14 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
             });
         }
     } else if (isLightText(prevVDOM) && isLightText(nextVDOM)) {
-        if (prevVDOM.toString() !== nextVDOM.toString()) {
+        if (prevVDOM.text !== nextVDOM.text) {
             patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM })
         }
     } else if (isLightComponentElement(prevVDOM) && isLightComponentElement(nextVDOM)) {
         if (prevVDOM.component !== nextVDOM.component) {
             patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM });
         } else if (!areShallowEqual(prevVDOM.props, nextVDOM.props)) {
-            const nextResultVDOM = nextVDOM.component(nextVDOM.props);
-            nextVDOM.resultVDOM = nextResultVDOM;
+            nextVDOM.shallowRender();
             patches.push(...diff(prevVDOM.resultVDOM, nextVDOM.resultVDOM, prevVDOM._DOM!));
         } // Else the VDOM will not be updated
     } else if (prevVDOM !== nextVDOM) {
@@ -54,6 +53,8 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
         console.error("Unknown parameters", { prevVDOM, nextVDOM })
         throw new Error("Unknown parameters");
     }
+
+    // console.log(prevVDOM, nextVDOM, patches);
     return patches;
 }
 

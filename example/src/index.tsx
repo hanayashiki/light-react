@@ -100,4 +100,43 @@ const test5ManyNested = () => {
     );
 }
 
-test5ManyNested();
+const test5Example = () => {
+    function Comp({ text, intro }: { text: string, intro: string }) {
+        return (
+            <div>
+                <h3>{text}</h3>
+                <p>{intro}</p>
+            </div>
+        )
+    }
+
+    React.render(
+        <Comp text={"Light React Sample"} intro={"Understand react by building it. "}/>,
+        document.getElementById("root"),
+    );
+}
+
+const test6ExampleRerender = () => {
+    function Comp({ text, intro }: { text: string, intro: string }) {
+        return (
+            <div>
+                <h3>{text}</h3>
+                <p>{intro}</p>
+            </div>
+        )
+    }
+
+    React.render(
+        <Comp text={"Light React Sample"} intro={"Understand react by building it. "}/>,
+        document.getElementById("root"),
+    );
+
+    setTimeout(() => {
+        React.render(
+            <Comp text="fuckfuckfuck" intro="should rerender..." />,
+            document.getElementById("root"),
+        );
+    }, 1000);
+}
+
+test6ExampleRerender();
