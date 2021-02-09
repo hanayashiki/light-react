@@ -65,12 +65,14 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
 export const diffProps = (prevVDOM: LightAtom, nextVDOM: LightAtom) => {
     const patches: Patch[] = [];
     for (const [key, value] of Object.entries(nextVDOM.props)) {
-        patches.push({
-            type: 'updateProps',
-            DOM: prevVDOM._DOM!,
-            key,
-            value: value as any,
-        })
+        if (value !== (prevVDOM.props as any)[key]) {
+            patches.push({
+                type: 'updateProps',
+                DOM: prevVDOM._DOM!,
+                key,
+                value: value as any,
+            })
+        }
     }
 
     for (const [key] of Object.entries(prevVDOM.props)) {

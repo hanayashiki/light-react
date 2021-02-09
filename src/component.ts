@@ -53,12 +53,8 @@ export const createComponentElement = <P extends {}>(
             }
             try {
                 this.resultVDOM = this.component(this.props);
-
-                console.log(currentContext);
-
                 context.nthState = 0;
                 context.firstRender = false;
-
             } finally {
                 currentContext = prevContext;
             }

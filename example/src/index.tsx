@@ -194,4 +194,34 @@ const test8ExampleUseState = () => {
     );
 }
 
-test8ExampleUseState();
+const test9ExampleUseState = () => {
+    console.log("test9ExampleUseState", document.getElementById("root"))
+
+    function Nested({ answer }: any) {
+        return <h1>Answer is {answer}</h1>;
+    }
+
+    function Comp() {
+        const [count, setCount] = useState(0);
+
+        // @ts-ignore
+        window.clickComp = () => { 
+            setCount(count => count + 1)
+        }
+
+        return (
+            <div onclick={"clickComp();"}>
+                <Nested answer="42"/>
+                <h3>You clicked {`${count}`} times</h3>
+            </div>
+        )
+    }
+
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+test9ExampleUseState();

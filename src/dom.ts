@@ -26,6 +26,7 @@ export const createAtom = <P extends {}>(
 }
 
 export const render = (nextVDOM: LightNode, rootDOM: Element | null) => {
+    // console.log("render", nextVDOM, rootDOM);
     if (rootDOM === null) {
         return;
     }
@@ -38,7 +39,7 @@ export const render = (nextVDOM: LightNode, rootDOM: Element | null) => {
 export const diffAndPatch = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Element) => {
     const patches: Patch[] = diff(prevVDOM, nextVDOM, parentDOM);
     patch(patches);
-    console.log(patches);
+    // console.log(patches);
     return patches;
 }
 

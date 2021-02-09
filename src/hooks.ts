@@ -1,7 +1,7 @@
 import { resolveComponentContext } from "./component";
 
 type Dispatch<A> = (value: A) => void;
-type SetStateAction<S> = S;
+type SetStateAction<S> = S | ((s: S) => S);
 
 export function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
     const context = resolveComponentContext();
@@ -12,9 +12,13 @@ export function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateA
         context.states.push(state);
     }
 
-    const setState: Dispatch<S> = (s: S) => {
+    const setState: Dispatch<SetStateAction<S>> = (s) => {
         if (s !== context.states[nthState]) {
-            context.states[nthState] = s;
+            if (s instanceof Function) {
+                context.states[nthState] = s(context.states[nthState]);
+            } else {
+                context.states[nthState] = s;
+            }
             context.rerender!();
         }
     };
