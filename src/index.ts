@@ -5,7 +5,6 @@ import { createComponentElement } from './component';
 
 export * from './hooks';
 
-
 export function createElement<P extends {}>(
     tag: string | LightComponent<P>,
     props?: P,

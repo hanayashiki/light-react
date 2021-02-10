@@ -8,6 +8,7 @@ declare global {
             h4: any;
             h5: any;
             p: any;
+            br: any;
         }
     }
 }

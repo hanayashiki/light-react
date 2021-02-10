@@ -1,3 +1,5 @@
+import { ComponentContext } from "../component";
+
 export type LightNode = LightComponentElement | LightText | LightAtom | string | undefined;
 
 export interface LightAtom<Props = {}> {
@@ -20,6 +22,7 @@ export interface LightComponentElement<Props = {}> {
     tag: '',
     type: 'LightComponentElement',
     component: LightComponent<Props>;
+    context: ComponentContext<Props>;
     props: Props;
     children: LightNode[];
     _DOM?: GenericDOM;

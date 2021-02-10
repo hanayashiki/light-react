@@ -1,4 +1,4 @@
-import React, { useState } from 'light-react';
+import React, { useEffect, useMemo, useRef, useState } from 'light-react';
 
 const test1 = () => {
     React.render(
@@ -224,4 +224,92 @@ const test9ExampleUseState = () => {
     );
 }
 
-test9ExampleUseState();
+const test10ExampleUseRef = () => {
+    function Comp() {
+        const [counter, setCounter] = useState(0);
+        const lastRender = useRef(new Date);
+
+        console.log("rendered");
+
+        // @ts-ignore
+        window.clickComp = () => { 
+            console.log("clicked");
+            setCounter(counter => counter + 1)
+        } 
+
+        const elapsed = new Date().getTime() - lastRender.current.getTime();
+
+        lastRender.current = new Date();
+
+        return (
+            <div onclick={"clickComp();"}>
+                <h3>Clicked {counter}</h3>
+                <p>Last render: {`${elapsed}`}ms ago</p>
+            </div>
+        )
+    }
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+const test10ExampleUseEffect = () => {
+    function Comp() {
+        const [data, setData] = useState(0);
+
+        useEffect(() => {
+            setTimeout(() => {
+                setData(data + 1);
+            }, 500);
+        }, [data]);
+
+        return (
+            <p>
+               This should update every 500ms: {data}
+            </p>
+        )
+    }
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+const test11ExampleUseMemo = () => {
+
+    let lastMemo: any = {};
+
+    function Comp() {
+        const [data, setData] = useState(0);
+
+        useEffect(() => {
+            setTimeout(() => {
+                setData(data + 1);
+            }, 500);
+        }, [data]);
+
+        const memo = useMemo(() => ({ data: Math.floor(data / 3) }), [Math.floor(data / 3)]);
+        const equal = memo === lastMemo;
+        lastMemo = memo;
+
+        return (
+            <p>
+               This should update every 500ms: {data} <br/>
+               memo is {JSON.stringify(memo)} <br/>
+               memo {equal ? "===" : "!=="} lastMemo <br/>
+            </p>
+        )
+    }
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+
+
+test11ExampleUseMemo();

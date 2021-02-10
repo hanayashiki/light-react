@@ -18,7 +18,14 @@ export const createAtom = <P extends {}>(
                     type: 'LightText',
                     text: child,
                 }
-            } else {
+            } else if (typeof child === "number") {
+                return {
+                    tag: '',
+                    type: 'LightText',
+                    text: `${child}`,
+                }
+            }
+            else {
                 return child;
             }
         }),
@@ -48,7 +55,11 @@ export const patch = (patches: Patch[]) => {
         if (patch.type === 'create') {
             const { nextVDOM, parentDOM } = patch;
             const dom = createDOM(nextVDOM);
-            parentDOM.appendChild(dom)
+            parentDOM.appendChild(dom);
+            
+            if (isLightComponentElement(nextVDOM)) {
+                nextVDOM.context.runEffects();
+            }
         } else if (patch.type === 'delete') {
             const { prevVDOM, parentDOM } = patch;
             if (isLightAtom(prevVDOM) || isLightComponentElement(prevVDOM)) {
@@ -56,6 +67,10 @@ export const patch = (patches: Patch[]) => {
                 if (dom) {
                     parentDOM.removeChild(dom);
                 }
+            }
+
+            if (isLightComponentElement(prevVDOM)) {
+                prevVDOM.context.cleanUp();
             }
         } else if (patch.type === 'updateProps') {
             const { DOM, key, value } = patch;
