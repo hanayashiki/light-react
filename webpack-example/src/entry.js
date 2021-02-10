@@ -13,25 +13,28 @@ function Child() {
 }
 
 function Comp() {
-    const [displayChild, setDisplayChild] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setDisplayChild(false);
-        }, 1000);
-    }, []);
-
+    const [counter, setCounter] = useState(0);
+    const lastRender = useRef(new Date());
+  
+    console.log("rendered");
+  
+    // @ts-ignore
+    window.clickComp = () => {
+      console.log("clicked");
+      setCounter((counter) => counter + 1);
+    };
+  
+    const elapsed = new Date().getTime() - lastRender.current.getTime();
+  
+    lastRender.current = new Date();
+  
     return (
-        <p>
-            <div>
-                {displayChild ? "Unmount child in 1000ms" : "Child is unmounted and should display something in the log. "}
-            </div>
-            {displayChild ? <Child /> : undefined}
-        </p>
-    )
-}
-
-React.render(
-    <Comp />,
-    document.getElementById("root"),
-);
+      <div onclick={"clickComp();"}>
+        <h3>Clicked {counter}</h3>
+        <p>Last render: {`${elapsed}`}ms ago</p>
+      </div>
+    );
+  }
+  
+  React.render(<Comp />, document.getElementById("root"));
+  

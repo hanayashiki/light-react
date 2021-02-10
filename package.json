@@ -15,7 +15,7 @@
   "scripts": {
     "build": "microbundle",
     "watch": "tsc -w",
-    "prepare": "yarn build"
+    "prepare": "microbundle"
   },
   "devDependencies": {
     "microbundle": "^0.13.0",
