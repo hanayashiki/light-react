@@ -71,6 +71,6 @@
     "src"
   ],
   "exclude": [
-    "example"
+    "snowpack-example"
   ]
 }

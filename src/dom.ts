@@ -56,10 +56,6 @@ export const patch = (patches: Patch[]) => {
             const { nextVDOM, parentDOM } = patch;
             const dom = createDOM(nextVDOM);
             parentDOM.appendChild(dom);
-            
-            if (isLightComponentElement(nextVDOM)) {
-                nextVDOM.context.runEffects();
-            }
         } else if (patch.type === 'delete') {
             const { prevVDOM, parentDOM } = patch;
             if (isLightAtom(prevVDOM) || isLightComponentElement(prevVDOM)) {
@@ -109,6 +105,8 @@ function createDOM(vdom: LightNode): GenericDOM {
         vdom.shallowRender();
         dom = createDOM(vdom.resultVDOM);
         vdom._DOM = dom;
+
+        vdom.context.runEffects();
     }
 
     return dom as GenericDOM;

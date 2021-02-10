@@ -1,13 +1,28 @@
-import { diff } from "./diff";
-import { diffAndPatch, render } from "./dom";
-import React, { EffectContext } from "./index";
-import { GenericDOM, LightAtom, LightComponent, LightComponentElement, LightNode, Patch } from "./types/dom";
-import { isLightAtom, isLightText } from "./utils";
+import { diffAndPatch } from "./dom";
+import { LightComponent, LightComponentElement, LightNode } from "./types/dom";
 
 let currentContext: ComponentContext<{}> | undefined = undefined;
 
 export type Task = {
     type: 'rerender',
+}
+
+export type EffectCallback = () => (void | (() => void | undefined));
+export type DependencyList = ReadonlyArray<any>;
+export interface EffectContext {
+    cleanUp?: () => void;
+    effect: EffectCallback;
+    deps?: DependencyList;
+    firstTime: boolean;
+    shouldRun: boolean;
+}
+
+export interface EffectContext {
+    cleanUp?: () => void;
+    effect: EffectCallback;
+    deps?: DependencyList;
+    firstTime: boolean;
+    shouldRun: boolean;
 }
 
 export interface Slot<T> { 
@@ -71,6 +86,7 @@ export const createComponentElement = <P extends {}>(
             }
         },
         runEffects() {
+            // console.log(this.componentElement?.component.name, "runEffects", this.effects);
             for (const effect of this.effects) {
                 if (effect.shouldRun) {
                     const cleanUp = effect.effect();
@@ -81,6 +97,7 @@ export const createComponentElement = <P extends {}>(
             }
         },
         cleanUp() {
+            // console.log(this.componentElement?.component.name, "cleanUp", this.effects);
             for (const effect of this.effects) {
                 if (effect.cleanUp) {
                     effect.cleanUp();

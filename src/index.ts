@@ -3,9 +3,14 @@ import { createAtom, render } from './dom';
 import { LightComponent, LightNode } from './types/dom';
 import { createComponentElement } from './component';
 
-export * from './hooks';
+import {
+    useEffect,
+    useState,
+    useRef,
+    useMemo,
+} from './hooks';
 
-export function createElement<P extends {}>(
+function createElement<P extends {}>(
     tag: string | LightComponent<P>,
     props?: P,
     ...children: LightNode[]
@@ -21,5 +26,13 @@ const React = {
     createElement,
     render
 }
+
+export {
+    React,
+    useEffect,
+    useState,
+    useRef,
+    useMemo,
+};
 
 export default React;

@@ -1,0 +1,23 @@
+{
+  "name": "webpack-example",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "webpack serve --mode development --env development",
+    "build": "webpack --mode production",
+    "prod:lib": "cd ..; yarn build; cd -; yarn build; yarn http-server dist"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "html-webpack-plugin": "^5.0.0",
+    "webpack": "^5.21.2",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "http-server": "^0.12.3",
+    "light-react": "link:../"
+  }
+}

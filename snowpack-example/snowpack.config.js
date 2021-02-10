@@ -5,16 +5,15 @@ module.exports = {
     src: { url: '/dist' },
   },
   plugins: [
-    '@snowpack/plugin-typescript'
+    '@snowpack/plugin-typescript',
+    ['@snowpack/plugin-webpack', {}]
   ],
   routes: [
     /* Enable an SPA Fallback in development: */
     // {"match": "routes", "src": ".*", "dest": "/index.html"},
   ],
   optimize: {
-    /* Example: Bundle your final build: */
-    bundle: true,
-    minify: true,
+
   },
   packageOptions: {
     /* ... */

@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'light-react';
+import { React, useEffect, useMemo, useRef, useState } from 'light-react';
+// Snowpack has a problem with default export
 
 const test1 = () => {
     React.render(
@@ -50,7 +51,7 @@ const test3 = () => {
     }
 
     React.render(
-        <Comp text={"114514"}/>,
+        <Comp text={"114514"} />,
         document.getElementById("root"),
     );
 }
@@ -58,7 +59,7 @@ const test3 = () => {
 const test4Nested = () => {
     function Comp({ text }: { text: string }) {
         return (
-            <Nested text={text}/>
+            <Nested text={text} />
         )
     }
 
@@ -70,7 +71,7 @@ const test4Nested = () => {
 
 
     React.render(
-        <Comp text={"114514114514 nested"}/>,
+        <Comp text={"114514114514 nested"} />,
         document.getElementById("root"),
     );
 }
@@ -79,10 +80,10 @@ const test5ManyNested = () => {
     function Comp({ text }: { text: string }) {
         return (
             <div>
-                <Nested text={text}/>
-                <Nested text={text}/>
-                <Nested text={text}/>
-                <Nested text={text}/>
+                <Nested text={text} />
+                <Nested text={text} />
+                <Nested text={text} />
+                <Nested text={text} />
             </div>
         )
     }
@@ -95,7 +96,7 @@ const test5ManyNested = () => {
 
 
     React.render(
-        <Comp text={"114514114514 nested"}/>,
+        <Comp text={"114514114514 nested"} />,
         document.getElementById("root"),
     );
 }
@@ -111,7 +112,7 @@ const test5Example = () => {
     }
 
     React.render(
-        <Comp text={"Light React Sample"} intro={"Understand react by building it. "}/>,
+        <Comp text={"Light React Sample"} intro={"Understand react by building it. "} />,
         document.getElementById("root"),
     );
 }
@@ -127,7 +128,7 @@ const test6ExampleRerender = () => {
     }
 
     React.render(
-        <Comp text={"Light React Sample"} intro={"Understand react by building it. "}/>,
+        <Comp text={"Light React Sample"} intro={"Understand react by building it. "} />,
         document.getElementById("root"),
     );
 
@@ -146,7 +147,7 @@ const test7ExampleUseState = () => {
         console.log("rendered");
 
         // @ts-ignore
-        window.clickComp = () => { 
+        window.clickComp = () => {
             console.log("clicked");
             setText("clicked")
         }
@@ -175,13 +176,13 @@ const test8ExampleUseState = () => {
         const [count, setCount] = useState(0);
 
         // @ts-ignore
-        window.clickComp = () => { 
+        window.clickComp = () => {
             setCount(count + 1)
         }
 
         return (
             <div onclick={"clickComp();"}>
-                <Nested answer="42"/>
+                <Nested answer="42" />
                 <h3>You clicked {`${count}`} times</h3>
             </div>
         )
@@ -205,13 +206,13 @@ const test9ExampleUseState = () => {
         const [count, setCount] = useState(0);
 
         // @ts-ignore
-        window.clickComp = () => { 
+        window.clickComp = () => {
             setCount(count => count + 1)
         }
 
         return (
             <div onclick={"clickComp();"}>
-                <Nested answer="42"/>
+                <Nested answer="42" />
                 <h3>You clicked {`${count}`} times</h3>
             </div>
         )
@@ -232,10 +233,10 @@ const test10ExampleUseRef = () => {
         console.log("rendered");
 
         // @ts-ignore
-        window.clickComp = () => { 
+        window.clickComp = () => {
             console.log("clicked");
             setCounter(counter => counter + 1)
-        } 
+        }
 
         const elapsed = new Date().getTime() - lastRender.current.getTime();
 
@@ -267,7 +268,7 @@ const test10ExampleUseEffect = () => {
 
         return (
             <p>
-               This should update every 500ms: {data}
+                This should update every 500ms: {data}
             </p>
         )
     }
@@ -297,9 +298,9 @@ const test11ExampleUseMemo = () => {
 
         return (
             <p>
-               This should update every 500ms: {data} <br/>
-               memo is {JSON.stringify(memo)} <br/>
-               memo {equal ? "===" : "!=="} lastMemo <br/>
+                This should update every 500ms: {data} <br />
+               memo is {JSON.stringify(memo)} <br />
+               memo {equal ? "===" : "!=="} lastMemo <br />
             </p>
         )
     }
@@ -310,6 +311,42 @@ const test11ExampleUseMemo = () => {
     );
 }
 
+const test12ExampleUseEffectUnmount = () => {
+    function Child() {
+        useEffect(() => {
+            return () => {
+                console.log("Child is unmounted...")
+            }
+        }, []);
 
+        return (
+            <p>child</p>
+        )
+    }
 
-test11ExampleUseMemo();
+    function Comp() {
+        const [displayChild, setDisplayChild] = useState(true);
+
+        useEffect(() => {
+            setTimeout(() => {
+                setDisplayChild(false);
+            }, 1000);
+        }, []);
+
+        return (
+            <p>
+                <div>
+                    {displayChild ? "Unmount child in 1000ms" : "Child is unmounted and should display something in the log. "}
+               </div>
+               {displayChild ? <Child/> : undefined}
+            </p>
+        )
+    }
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+test12ExampleUseEffectUnmount();

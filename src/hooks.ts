@@ -1,4 +1,4 @@
-import { resolveComponentContext } from "./component";
+import { DependencyList, EffectCallback, EffectContext, resolveComponentContext } from "./component";
 import { areShallowEqual } from "./utils";
 
 type Dispatch<A> = (value: A) => void;
@@ -34,16 +34,6 @@ export function useRef<T>(initialValue: T): MutableRefObject<T> {
     }));
 
     return slot.slot;
-}
-
-export type EffectCallback = () => (void | (() => void | undefined));
-export type DependencyList = ReadonlyArray<any>;
-export interface EffectContext {
-    cleanUp?: () => void;
-    effect: EffectCallback;
-    deps?: DependencyList;
-    firstTime: boolean;
-    shouldRun: boolean;
 }
 
 export function useEffect(effect: EffectCallback, deps?: DependencyList): void {
