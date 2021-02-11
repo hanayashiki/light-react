@@ -48,10 +48,9 @@ export const diff = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Generi
         if (prevVDOM.component !== nextVDOM.component) {
             patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM });
         } else if (!areShallowEqual(prevVDOM.props, nextVDOM.props)) {
-            nextVDOM.shallowRender();
-            patches.push(...diff(prevVDOM.resultVDOM, nextVDOM.resultVDOM, prevVDOM._DOM!));
+            nextVDOM.inherit(prevVDOM);
+            nextVDOM.rerender();
         }
-        nextVDOM._DOM = prevVDOM._DOM; // TODO: Make this correct considering inner elements
     } else if (prevVDOM !== nextVDOM) {
         patches.push({ type: 'update', prevVDOM, nextVDOM, parentDOM });
     } else {

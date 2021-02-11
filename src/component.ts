@@ -35,7 +35,6 @@ export interface ComponentContext<P extends {}> {
     firstRender: boolean;
     nthSlot: number;
     slots: any[];
-    rerender?: () => void;
     resolveSlot: <T>(valueCreateor: () => T) => Slot<T>;
     effects: EffectContext[];
     registerEffect: (effect: EffectContext) => void;
@@ -55,6 +54,7 @@ export const createComponentElement = <P extends {}>(
     props: P,
     ...children: LightNode[]
 ): LightComponentElement<P> => {
+
     const context: ComponentContext<P> = {
         firstRender: true,
         nthSlot: 0,
@@ -86,9 +86,11 @@ export const createComponentElement = <P extends {}>(
             }
         },
         runEffects() {
-            // console.log(this.componentElement?.component.name, "runEffects", this.effects);
             for (const effect of this.effects) {
                 if (effect.shouldRun) {
+                    if (effect.cleanUp) {
+                        effect.cleanUp();
+                    }
                     const cleanUp = effect.effect();
                     if (cleanUp) {
                         effect.cleanUp = cleanUp;
@@ -110,27 +112,36 @@ export const createComponentElement = <P extends {}>(
         tag: '',
         type: 'LightComponentElement',
         component,
-        props: props,
+        props,
         children,
         context,
         shallowRender() {
             const prevContext = currentContext;
-            currentContext = context as any;
-            context.componentElement = this;
-            context.rerender = () => {
-                const prevVDOM = this.resultVDOM;
-                this.shallowRender();
-                const nextVDOM = this.resultVDOM;
-                diffAndPatch(prevVDOM, nextVDOM, this._DOM?.parentElement as Element);
-                this.context.runEffects();
-            }
+            currentContext = this.context as any;
+            this.context.componentElement = this;
             try {
                 this.resultVDOM = this.component(this.props);
-                context.nthSlot = 0;
-                context.firstRender = false;
+                this.context.nthSlot = 0;
+                this.context.firstRender = false;
             } finally {
                 currentContext = prevContext;
             }
-        }
+            setTimeout(() => {
+                this.context.runEffects();
+            })
+        },
+        rerender() {
+            const prevVDOM = this.resultVDOM;
+            this.shallowRender();
+            const nextVDOM = this.resultVDOM;
+            diffAndPatch(prevVDOM, nextVDOM, this._DOM?.parentElement as Element);
+        },
+        inherit(prev: LightComponentElement<P>) {
+            Object.assign(this, {
+                context: prev.context,
+                _DOM: prev._DOM,
+                resultVDOM: prev.resultVDOM,
+            });
+        },
     };
 }

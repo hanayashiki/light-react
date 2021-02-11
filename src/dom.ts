@@ -46,7 +46,6 @@ export const render = (nextVDOM: LightNode, rootDOM: Element | null) => {
 export const diffAndPatch = (prevVDOM: LightNode, nextVDOM: LightNode, parentDOM: Element) => {
     const patches: Patch[] = diff(prevVDOM, nextVDOM, parentDOM);
     patch(patches);
-    // console.log(patches);
     return patches;
 }
 
@@ -105,8 +104,6 @@ function createDOM(vdom: LightNode): GenericDOM {
         vdom.shallowRender();
         dom = createDOM(vdom.resultVDOM);
         vdom._DOM = dom;
-
-        vdom.context.runEffects();
     }
 
     return dom as GenericDOM;

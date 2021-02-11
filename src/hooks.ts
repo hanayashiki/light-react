@@ -13,7 +13,7 @@ export function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateA
     const setState: Dispatch<SetStateAction<S>> = (s) => {
         if (s !== slot.resolve()) {
             slot.setSlot(s);
-            context.rerender!();
+            context.componentElement!.rerender();
         }
     };
 

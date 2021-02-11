@@ -28,6 +28,8 @@ export interface LightComponentElement<Props = {}> {
     _DOM?: GenericDOM;
     resultVDOM?: LightNode;
     shallowRender: () => void;
+    rerender: () => void;
+    inherit: (prev: LightComponentElement<Props>) => void;
 }
 
 export interface LightComponent<Props = {}> {

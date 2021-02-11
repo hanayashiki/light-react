@@ -337,8 +337,8 @@ const test12ExampleUseEffectUnmount = () => {
             <p>
                 <div>
                     {displayChild ? "Unmount child in 1000ms" : "Child is unmounted and should display something in the log. "}
-               </div>
-               {displayChild ? <Child/> : undefined}
+                </div>
+                {displayChild ? <Child /> : undefined}
             </p>
         )
     }
@@ -349,4 +349,49 @@ const test12ExampleUseEffectUnmount = () => {
     );
 }
 
-test12ExampleUseEffectUnmount();
+const test13PropsUseEffect = () => {
+    function Child({ time }: any) {
+        useEffect(() => {
+            document.title = `Child: ${time}`
+
+            return () => {
+                console.log("clean up for", time);
+            }
+        }, [time]);
+
+        return (
+            <div>
+                <p>{time}</p>
+            </div>
+        )
+    }
+
+    function Comp() {
+        const [time, setTime] = useState(0);
+
+        useEffect(() => {
+            setTimeout(() => {
+                setTime(t => t + 1);
+            }, 500);
+
+            setTimeout(() => {
+                setTime(t => t + 1);
+            }, 1000);
+
+            setTimeout(() => {
+                setTime(t => t + 1);
+            }, 1500);
+        }, [])
+
+        return (
+            <Child time={time} />
+        )
+    }
+
+    React.render(
+        <Comp />,
+        document.getElementById("root"),
+    );
+}
+
+test9ExampleUseState();
